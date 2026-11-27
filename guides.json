@@ -1,0 +1,10 @@
+[
+  {
+    "id": "tooltip",
+    "title": { "ru": "Тултип-триггер «i» / «?»", "en": "Tooltip trigger \"i\" / \"?\"" },
+    "files": {
+      "ru": "../Caldera-tooltip-trigger-guidelines.md",
+      "en": "../Caldera-tooltip-trigger-guidelines-en.md"
+    }
+  }
+]

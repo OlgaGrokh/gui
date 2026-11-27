@@ -1,0 +1,282 @@
+<title>Caldera Guidelines</title>
+<meta name="claude:viewport-fit-sides" content="cover">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=Manrope:wght@600;700;800&family=JetBrains+Mono:wght@400;500&display=swap">
+<style>
+/* Layout: sticky top bar · left rail with guides + language · reading column · right "on this page" index */
+:root {
+  --bg: #f6f7f8;
+  --surface: #ffffff;
+  --fg: #1b2127;
+  --muted: #5d6873;
+  --line: #dde2e6;
+  --accent: #0e6f68;
+  --accent-soft: #e2f1ef;
+  --code-bg: #eef1f3;
+  --ok: #1d7a3e;
+  --bad: #b3261e;
+  --font-display: "Manrope", "Segoe UI", system-ui, sans-serif;
+  --font-body: "Inter", "Segoe UI", system-ui, -apple-system, sans-serif;
+  --font-mono: "JetBrains Mono", ui-monospace, "SFMono-Regular", Menlo, monospace;
+}
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) {
+    --bg: #12161a; --surface: #1a1f24; --fg: #e5e9ec; --muted: #9aa5ae; --line: #2c343b;
+    --accent: #4fc2b6; --accent-soft: #1b3533; --code-bg: #232a30; --ok: #5cc985; --bad: #f08a80;
+    color-scheme: dark;
+  }
+}
+:root[data-theme="dark"] {
+  --bg: #12161a; --surface: #1a1f24; --fg: #e5e9ec; --muted: #9aa5ae; --line: #2c343b;
+  --accent: #4fc2b6; --accent-soft: #1b3533; --code-bg: #232a30; --ok: #5cc985; --bad: #f08a80;
+  color-scheme: dark;
+}
+* { box-sizing: border-box; }
+body { background: var(--bg); color: var(--fg); font-family: var(--font-body); font-size: 15px; line-height: 1.6; }
+body::before { content: ""; position: fixed; inset: 0 0 auto; height: env(safe-area-inset-top, 0px); z-index: 10; background: var(--surface); }
+
+.topbar {
+  position: sticky; top: env(safe-area-inset-top, 0px); z-index: 5;
+  background: var(--surface); border-bottom: 1px solid var(--line);
+  padding-left: max(16px, env(safe-area-inset-left, 0px)); padding-right: max(16px, env(safe-area-inset-right, 0px));
+  padding-block: 10px;
+  display: flex; align-items: center; gap: 16px; flex-wrap: wrap;
+}
+.brand { font-family: var(--font-display); font-weight: 800; font-size: 17px; letter-spacing: -0.01em; margin-right: auto; }
+.brand span { color: var(--accent); }
+
+.seg { display: inline-flex; border: 1px solid var(--line); border-radius: 8px; overflow: hidden; background: var(--bg); }
+.seg button {
+  font: 600 13px var(--font-body); padding: 6px 14px; border: 0; background: transparent; color: var(--muted); cursor: pointer;
+}
+.seg button[aria-pressed="true"] { background: var(--accent); color: var(--surface); }
+.seg button:focus-visible, .btn:focus-visible, .guide-link:focus-visible, .toc a:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
+
+.shell {
+  display: grid; grid-template-columns: 240px minmax(0, 1fr) 220px; gap: 32px;
+  max-width: 1360px; margin: 0 auto;
+  padding-left: max(16px, env(safe-area-inset-left, 0px)); padding-right: max(16px, env(safe-area-inset-right, 0px));
+  padding-block: 24px 64px;
+}
+.rail, .toc { position: sticky; top: calc(env(safe-area-inset-top, 0px) + 72px); align-self: start; max-height: calc(100vh - 96px); overflow-y: auto; }
+.rail h2, .toc h2 { font: 600 11px var(--font-body); text-transform: uppercase; letter-spacing: 0.08em; color: var(--muted); margin: 0 0 8px; }
+.guide-link {
+  display: block; width: 100%; text-align: left; font: 500 14px/1.35 var(--font-body); color: var(--fg);
+  background: transparent; border: 0; border-radius: 6px; padding: 8px 10px; cursor: pointer;
+}
+.guide-link:hover { background: var(--code-bg); }
+.guide-link[aria-current="true"] { background: var(--accent-soft); color: var(--accent); font-weight: 600; }
+.rail-note { margin-top: 16px; font-size: 12px; color: var(--muted); line-height: 1.5; }
+
+.toc ol { list-style: none; margin: 0; padding: 0; border-left: 1px solid var(--line); }
+.toc a { display: block; padding: 4px 0 4px 12px; margin-left: -1px; border-left: 2px solid transparent; color: var(--muted); text-decoration: none; font-size: 13px; line-height: 1.4; }
+.toc a:hover { color: var(--fg); }
+.toc a.active { color: var(--accent); border-left-color: var(--accent); }
+
+.doc-head { display: flex; gap: 12px; align-items: center; flex-wrap: wrap; margin-bottom: 8px; }
+.doc-head .spacer { flex: 1; }
+.btn {
+  font: 500 13px var(--font-body); color: var(--fg); background: var(--surface);
+  border: 1px solid var(--line); border-radius: 7px; padding: 6px 12px; cursor: pointer; white-space: nowrap;
+}
+.btn:hover { border-color: var(--accent); color: var(--accent); }
+.btn.done { border-color: var(--ok); color: var(--ok); }
+
+.doc { background: var(--surface); border: 1px solid var(--line); border-radius: 10px; padding: 32px 40px 40px; min-width: 0; }
+.doc > :first-child { margin-top: 0; }
+.doc h1 { font-family: var(--font-display); font-size: 30px; line-height: 1.2; letter-spacing: -0.02em; margin: 0 0 12px; text-wrap: balance; }
+.doc h2 { font-family: var(--font-display); font-size: 21px; line-height: 1.3; letter-spacing: -0.01em; margin: 0; text-wrap: balance; }
+.doc h3 { font-family: var(--font-display); font-size: 16px; margin: 24px 0 8px; }
+.doc p, .doc li { max-width: 72ch; }
+.doc p { margin: 0 0 12px; }
+.doc ul, .doc ol { padding-left: 22px; margin: 0 0 14px; }
+.doc li { margin-bottom: 4px; }
+.doc a { color: var(--accent); }
+.doc hr { display: none; }
+.doc blockquote { margin: 0 0 20px; padding: 12px 16px; background: var(--accent-soft); border-radius: 8px; color: var(--fg); }
+.doc blockquote p:last-child { margin-bottom: 0; }
+.doc code { font-family: var(--font-mono); font-size: 0.86em; background: var(--code-bg); padding: 1px 5px; border-radius: 4px; }
+.doc pre { background: var(--code-bg); border-radius: 8px; padding: 12px 16px; overflow-x: auto; margin: 0 0 14px; }
+.doc pre code { background: none; padding: 0; font-size: 13px; line-height: 1.55; }
+.table-wrap { overflow-x: auto; margin: 0 0 16px; border: 1px solid var(--line); border-radius: 8px; }
+.doc table { border-collapse: collapse; width: 100%; font-size: 14px; }
+.doc th, .doc td { text-align: left; vertical-align: top; padding: 8px 12px; border-bottom: 1px solid var(--line); }
+.doc th { background: var(--code-bg); font-weight: 600; white-space: nowrap; }
+.doc tr:last-child td { border-bottom: 0; }
+
+.doc section { border-top: 1px solid var(--line); padding-top: 24px; margin-top: 28px; }
+.sec-head { display: flex; align-items: flex-start; gap: 12px; margin-bottom: 12px; }
+.sec-head h2 { flex: 1; min-width: 0; scroll-margin-top: 80px; }
+.sec-head .btn { opacity: 0.55; font-size: 12px; padding: 4px 10px; }
+.sec-head:hover .btn, .sec-head .btn:focus-visible, .sec-head .btn.done { opacity: 1; }
+
+.mobile-guides { display: none; }
+.toast { position: fixed; bottom: calc(16px + env(safe-area-inset-bottom, 0px)); left: 50%; transform: translateX(-50%); background: var(--fg); color: var(--bg); padding: 8px 16px; border-radius: 8px; font-size: 13px; z-index: 20; }
+
+@media (max-width: 1100px) {
+  .shell { grid-template-columns: 220px minmax(0, 1fr); }
+  .toc { display: none; }
+}
+@media (max-width: 760px) {
+  .shell { grid-template-columns: minmax(0, 1fr); padding-block: 16px 48px; gap: 16px; }
+  .rail { display: none; }
+  .mobile-guides { display: block; }
+  .mobile-guides select { width: 100%; font: 500 14px var(--font-body); padding: 8px; border-radius: 8px; border: 1px solid var(--line); background: var(--surface); color: var(--fg); }
+  .doc { padding: 20px 16px 28px; }
+  .doc h1 { font-size: 24px; }
+  .sec-head .btn { opacity: 1; }
+}
+@media (prefers-reduced-motion: reduce) { html { scroll-behavior: auto; } }
+html { scroll-behavior: smooth; }
+</style>
+
+<header class="topbar">
+  <div class="brand">Caldera <span>Guidelines</span></div>
+  <div class="seg" role="group" aria-label="Language">
+    <button type="button" id="lang-ru" data-lang="ru">RU</button>
+    <button type="button" id="lang-en" data-lang="en">EN</button>
+  </div>
+</header>
+
+<div class="shell">
+  <nav class="rail" aria-label="Guides">
+    <h2 id="rail-title">Гайдлайны</h2>
+    <div id="guide-list"></div>
+  </nav>
+
+  <main style="min-width:0">
+    <div class="mobile-guides"><label class="sr" for="guide-select" hidden>Guide</label><select id="guide-select"></select></div>
+    <div class="doc-head">
+      <div class="spacer"></div>
+      <button type="button" class="btn" id="copy-rich"></button>
+      <button type="button" class="btn" id="copy-md"></button>
+    </div>
+    <article class="doc" id="doc"></article>
+  </main>
+
+  <aside class="toc" aria-label="On this page">
+    <h2 id="toc-title">На странице</h2>
+    <ol id="toc-list"></ol>
+  </aside>
+</div>
+<div class="toast" id="toast" hidden></div>
+
+<script id="guides-data" type="application/json">__GUIDES_JSON__</script>
+<script>
+(function () {
+  const GUIDES = JSON.parse(document.getElementById('guides-data').textContent);
+  const UI = {
+    ru: { guides: 'Гайдлайны', toc: 'На странице', rich: 'Копировать текст', md: 'Копировать Markdown', sec: 'Копировать раздел',
+          copied: 'Скопировано', copiedMd: 'Markdown скопирован', fail: 'Не удалось скопировать — текст выделен, нажмите ⌘C', note: 'Текст копируется с форматированием и вставляется в Confluence или Word как есть.' },
+    en: { guides: 'Guidelines', toc: 'On this page', rich: 'Copy text', md: 'Copy Markdown', sec: 'Copy section',
+          copied: 'Copied', copiedMd: 'Markdown copied', fail: 'Copy failed — text is selected, press ⌘C', note: 'Text is copied with formatting and pastes into Confluence or Word as is.' }
+  };
+  let state = { guide: GUIDES[0].id, lang: 'ru' };
+  try { const s = JSON.parse(localStorage.getItem('caldera-guides') || '{}'); if (s.lang) state.lang = s.lang; if (s.guide) state.guide = s.guide; } catch (e) {}
+  const fromHash = () => {
+    const m = location.hash.replace('#', '').match(/^([a-z0-9-]+)-(ru|en)$/);
+    if (m && GUIDES.some(g => g.id === m[1])) { state.guide = m[1]; state.lang = m[2]; }
+  };
+  fromHash();
+  if (!GUIDES.some(g => g.id === state.guide)) state.guide = GUIDES[0].id;
+
+  const $ = id => document.getElementById(id);
+  const docEl = $('doc');
+  let sections = []; // {md, el}
+  let fullMd = '';
+
+  function slug(t, i) { return 's' + i + '-' + t.toLowerCase().replace(/[^a-zа-яё0-9]+/gi, '-').replace(/^-|-$/g, '').slice(0, 40); }
+
+  function render() {
+    const g = GUIDES.find(x => x.id === state.guide);
+    const t = UI[state.lang];
+    const doc = g.docs[state.lang] || g.docs.ru || g.docs.en;
+    fullMd = doc.md;
+    document.documentElement.lang = state.lang;
+    $('rail-title').textContent = t.guides; $('toc-title').textContent = t.toc;
+    $('copy-rich').textContent = t.rich; $('copy-md').textContent = t.md;
+    ['ru', 'en'].forEach(l => $('lang-' + l).setAttribute('aria-pressed', String(l === state.lang)));
+
+    $('guide-list').innerHTML = ''; $('guide-select').innerHTML = '';
+    GUIDES.forEach(x => {
+      const b = document.createElement('button'); b.type = 'button'; b.className = 'guide-link';
+      b.textContent = x.title[state.lang]; b.setAttribute('aria-current', String(x.id === state.guide));
+      b.onclick = () => go(x.id, state.lang); $('guide-list').appendChild(b);
+      const o = document.createElement('option'); o.value = x.id; o.textContent = x.title[state.lang]; o.selected = x.id === state.guide;
+      $('guide-select').appendChild(o);
+    });
+    const note = document.createElement('p'); note.className = 'rail-note'; note.textContent = t.note; $('guide-list').appendChild(note);
+
+    docEl.innerHTML = ''; sections = [];
+    const toc = $('toc-list'); toc.innerHTML = '';
+    doc.sections.forEach(({ md, html }, i) => {
+      if (i === 0 && !/^## /.test(md)) { const d = document.createElement('div'); d.innerHTML = html; docEl.appendChild(d); sections.push({ md, el: d }); return; }
+      const sec = document.createElement('section'); sec.innerHTML = html;
+      const h2 = sec.querySelector('h2');
+      const id = slug(h2.textContent, i); h2.id = id;
+      const head = document.createElement('div'); head.className = 'sec-head';
+      h2.replaceWith(head); head.appendChild(h2);
+      const btn = document.createElement('button'); btn.type = 'button'; btn.className = 'btn'; btn.textContent = t.sec;
+      btn.onclick = () => copyRich(sec, md, btn, true); head.appendChild(btn);
+      docEl.appendChild(sec); sections.push({ md, el: sec });
+      const li = document.createElement('li'); const a = document.createElement('a'); a.href = '#' + state.guide + '-' + state.lang; a.textContent = h2.textContent; a.dataset.target = id;
+      a.onclick = e => { e.preventDefault(); h2.scrollIntoView(); }; li.appendChild(a); toc.appendChild(li);
+    });
+    docEl.querySelectorAll('table').forEach(tb => { const w = document.createElement('div'); w.className = 'table-wrap'; tb.replaceWith(w); w.appendChild(tb); });
+    if (location.hash !== '#' + state.guide + '-' + state.lang) history.replaceState(null, '', '#' + state.guide + '-' + state.lang);
+    try { localStorage.setItem('caldera-guides', JSON.stringify(state)); } catch (e) {}
+    spy();
+  }
+
+  function go(guide, lang) { state.guide = guide; state.lang = lang; render(); window.scrollTo(0, 0); }
+
+  function cleanHtml(el, dropFirstButton) {
+    const c = el.cloneNode(true);
+    c.querySelectorAll('button').forEach(b => b.remove());
+    c.querySelectorAll('.sec-head').forEach(h => h.replaceWith(...h.childNodes));
+    c.querySelectorAll('.table-wrap').forEach(w => w.replaceWith(...w.childNodes));
+    c.querySelectorAll('table').forEach(t => { t.setAttribute('border', '1'); t.style.borderCollapse = 'collapse'; });
+    return c;
+  }
+
+  function toast(msg) { const t = $('toast'); t.textContent = msg; t.hidden = false; clearTimeout(toast.t); toast.t = setTimeout(() => t.hidden = true, 1800); }
+  function mark(btn) { if (!btn) return; const old = btn.textContent; btn.classList.add('done'); btn.textContent = '✓ ' + UI[state.lang].copied; setTimeout(() => { btn.classList.remove('done'); btn.textContent = old; }, 1500); }
+  function selectEl(el) { const r = document.createRange(); r.selectNodeContents(el); const s = getSelection(); s.removeAllRanges(); s.addRange(r); }
+
+  function copyRich(el, md, btn) {
+    const c = cleanHtml(el);
+    const html = c.innerHTML; const text = c.innerText || el.innerText;
+    const fallback = () => { selectEl(el); toast(UI[state.lang].fail); };
+    try {
+      if (window.ClipboardItem && navigator.clipboard && navigator.clipboard.write) {
+        navigator.clipboard.write([new ClipboardItem({ 'text/html': new Blob([html], { type: 'text/html' }), 'text/plain': new Blob([text], { type: 'text/plain' }) })])
+          .then(() => { mark(btn); toast(UI[state.lang].copied); })
+          .catch(() => navigator.clipboard.writeText(text).then(() => { mark(btn); toast(UI[state.lang].copied); }, fallback));
+      } else if (navigator.clipboard) {
+        navigator.clipboard.writeText(text).then(() => { mark(btn); toast(UI[state.lang].copied); }, fallback);
+      } else fallback();
+    } catch (e) { fallback(); }
+  }
+  function copyMd(md, btn) {
+    try { navigator.clipboard.writeText(md).then(() => { mark(btn); toast(UI[state.lang].copiedMd); }, () => { selectEl(docEl); toast(UI[state.lang].fail); }); }
+    catch (e) { selectEl(docEl); toast(UI[state.lang].fail); }
+  }
+
+  $('copy-rich').onclick = e => copyRich(docEl, fullMd, e.currentTarget);
+  $('copy-md').onclick = e => copyMd(fullMd, e.currentTarget);
+  $('lang-ru').onclick = () => go(state.guide, 'ru');
+  $('lang-en').onclick = () => go(state.guide, 'en');
+  $('guide-select').onchange = e => go(e.target.value, state.lang);
+  window.addEventListener('hashchange', () => { fromHash(); render(); });
+
+  function spy() {
+    const links = [...document.querySelectorAll('.toc a')];
+    let cur = null;
+    links.forEach(a => { const h = document.getElementById(a.dataset.target); if (h && h.getBoundingClientRect().top < 120) cur = a; });
+    links.forEach(a => a.classList.toggle('active', a === (cur || links[0])));
+  }
+  window.addEventListener('scroll', spy, { passive: true });
+
+  render();
+})();
+</script>
